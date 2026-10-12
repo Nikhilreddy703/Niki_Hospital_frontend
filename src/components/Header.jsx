@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import logo from '../logo.png'
 import Icon from './Icons.jsx'
 
 const links = [['Home', '/'], ['About', '/about'], ['Doctors', '/doctors'], ['Services', '/services'], ['Contact', '/contact']]
@@ -10,7 +11,7 @@ export default function Header() {
   return <header className="site-header">
     <div className="container header-inner">
       <Link to="/" className="brand" onClick={close} aria-label="NIKHIL CENTER FOR HEALTH CARE home">
-        <span className="brand-mark"><Icon name="plus" size={22}/></span>
+        <img className="brand-logo" src={logo} alt="NIKHIL CENTER FOR HEALTH CARE logo" />
         <span className="brand-name">NIKHIL CENTER <small>FOR HEALTH CARE</small></span>
       </Link>
       <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Close navigation' : 'Open navigation'} aria-expanded={open}><Icon name={open ? 'close' : 'menu'} size={23}/></button>
