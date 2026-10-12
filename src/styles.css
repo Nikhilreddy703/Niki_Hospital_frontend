@@ -64,6 +64,7 @@ p{color:#63758c}
 .footer-links a,.footer-contact a,.nav-links a,.button,.field input,.field select,.field textarea{font-family:'Inter',Arial,sans-serif}
 .brand-logo{display:block;width:88px;height:58px;flex:none;object-fit:contain;border-radius:8px;background:#102944}
 .brand-light .brand-logo{width:100px;height:66px}
+.brand-light .brand-name{color:#fff}
 @media(min-width:761px){.nav-links a{font-size:13px}.main-nav{gap:24px}.nav-links{gap:19px}}
 @media(max-width:1000px){.nav-links a{font-size:12px}}
 @media(max-width:760px){.nav-links a{font-size:14px}}
