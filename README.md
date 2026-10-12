@@ -1,4 +1,4 @@
-# NIKHIL CENTER FOR HEALTH CARE
+# Nikhil CareOne for healthcare
 
 Patient-facing appointment website built with React and Vite. The backend is configured through `VITE_API_BASE_URL` and is not part of this project.
 
