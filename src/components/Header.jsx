@@ -16,7 +16,7 @@ export default function Header() {
       </Link>
       <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Close navigation' : 'Open navigation'} aria-expanded={open}><Icon name={open ? 'close' : 'menu'} size={23}/></button>
       <nav className={`main-nav ${open ? 'is-open' : ''}`} aria-label="Main navigation">
-        <div className="nav-links">{links.map(([label, to]) => <NavLink key={to} to={to} onClick={close} end={to === '/'}>{label}</NavLink>)}</div>
+        <div className="nav-links">{links.map(([label, to]) => <NavLink key={to} to={to} onClick={close} end={to === '/'}>{label}</NavLink>)}<NavLink to="/doctor/login" onClick={close}>Doctor Login</NavLink></div>
         <Link className="button button-primary nav-cta" to="/track" onClick={close}>Track Appointment <Icon name="arrow" size={16}/></Link>
       </nav>
     </div>
