@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'https://niki-hospital-backend-api.onrender.com').replace(/\/+$/, '')
 const TOKEN_KEY = 'careone_doctor_token'
 const STAFF_TOKEN_KEY = 'careone_staff_token'
 

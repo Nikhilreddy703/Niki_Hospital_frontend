@@ -1,6 +1,6 @@
 # Nikhil CareOne for healthcare
 
-Patient-facing appointment website built with React and Vite. The backend is configured through `VITE_API_BASE_URL` and is not part of this project.
+Patient-facing appointment website built with React and Vite. The backend is not part of this project. The frontend defaults to the production backend; `VITE_API_BASE_URL` can override it for another environment.
 
 ## Run locally
 
@@ -11,7 +11,7 @@ Patient-facing appointment website built with React and Vite. The backend is con
 
 ## Deploy to Vercel
 
-In the Vercel project, add the environment variable `VITE_API_BASE_URL` with value `https://niki-hospital-backend-api.onrender.com` for the environments you deploy (Production and Preview as needed), then redeploy. Vite embeds this public API origin at build time; the local `.env` file is intentionally ignored by Git and is not uploaded to Vercel. Do not add credentials or private secrets to Vite environment variables.
+The frontend defaults to `https://niki-hospital-backend-api.onrender.com`, so a Vercel environment variable is optional for the production backend. Set `VITE_API_BASE_URL` in Vercel only when you need to override it for a different backend. Vite embeds this public API origin at build time; the local `.env` file is intentionally ignored by Git and is not uploaded to Vercel. Do not add credentials or private secrets to Vite environment variables.
 
 `vercel.json` rewrites app routes such as `/doctor/login` and `/doctor/dashboard` to the SPA entry point so direct links and page refreshes work.
 
