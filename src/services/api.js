@@ -1,5 +1,12 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
 const TOKEN_KEY = 'careone_doctor_token'
+const STAFF_TOKEN_KEY = 'careone_staff_token'
+
+export const staffSession = {
+  getToken() { return sessionStorage.getItem(STAFF_TOKEN_KEY) },
+  save(token) { sessionStorage.setItem(STAFF_TOKEN_KEY, token) },
+  clear() { sessionStorage.removeItem(STAFF_TOKEN_KEY) },
+}
 
 export const doctorSession = {
   getToken() { return sessionStorage.getItem(TOKEN_KEY) },
@@ -63,6 +70,51 @@ export const appointmentService = {
 
 export const authService = {
   async loginDoctor(credentials) { return request('/api/doctors/login', { method: 'POST', body: JSON.stringify(credentials) }) },
+  async loginStaff(credentials) { return request('/api/staff/auth/login', { method: 'POST', body: JSON.stringify(credentials) }) },
+}
+
+async function staffRequest(path, options = {}) {
+  if (!API_BASE_URL) throw new Error('The hospital appointment service is not configured.')
+  let response
+  try { response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(staffSession.getToken() ? { Authorization: `Bearer ${staffSession.getToken()}` } : {}), ...options.headers } }) }
+  catch { throw new Error('Unable to connect to the hospital appointment service. Please try again later.') }
+  let data
+  try { data = await response.json() } catch { data = {} }
+  if (!response.ok || data.success === false) {
+    const error = new Error(data.message || friendlyError(response.status, data.errorCode)); error.status = response.status; error.code = data.errorCode
+    if (response.status === 401) { staffSession.clear(); window.dispatchEvent(new Event('staff-session-expired')) }
+    throw error
+  }
+  return data
+}
+
+export const staffService = {
+  async me() { return staffRequest('/api/staff/me') },
+  async adminDashboard(params = '') { return staffRequest(`/api/admin/dashboard${params ? `?${params}` : ''}`) },
+  async adminAppointments(params = '') { return staffRequest(`/api/admin/appointments${params ? `?${params}` : ''}`) },
+  async adminDoctors(params = '') { return addDoctorLocations(await staffRequest(`/api/admin/doctors${params ? `?${params}` : ''}`)) },
+  async adminAvailability(params = '') { return addDoctorLocations(await staffRequest(`/api/admin/doctors/availability${params ? `?${params}` : ''}`)) },
+  async adminLeaves(params = '') { return staffRequest(`/api/admin/doctors/on-leave${params ? `?${params}` : ''}`) },
+  async adminStaff(params = '') { return staffRequest(`/api/admin/staff${params ? `?${params}` : ''}`) },
+  async createStaff(staff) { return staffRequest('/api/staff', { method: 'POST', body: JSON.stringify(staff) }) },
+  async adminReports(params = '') { return staffRequest(`/api/admin/reports${params ? `?${params}` : ''}`) },
+  async receptionAppointments(params = '') { return staffRequest(`/api/reception/appointments${params ? `?${params}` : ''}`) },
+  async checkIn(id) { return staffRequest(`/api/appointments/${encodeURIComponent(id)}/check-in`, { method: 'POST' }) },
+  async noShow(id) { return staffRequest(`/api/appointments/${encodeURIComponent(id)}/no-show`, { method: 'POST' }) },
+  async completed(params = '') { return staffRequest(`/api/medical-center/completed-appointments${params ? `?${params}` : ''}`) },
+  async prescription(id) { return staffRequest(`/api/medical-center/appointments/${encodeURIComponent(id)}/prescription`) },
+}
+
+async function addDoctorLocations(result) {
+  const rows = Array.isArray(result?.data) ? result.data : Array.isArray(result?.doctors) ? result.doctors : []
+  try {
+    const directory = await doctorService.list()
+    const locations = new Map(directory.map((doctor) => [doctor.doctorId, doctor.location || doctor.hospital || null]))
+    const enriched = rows.map((doctor) => ({ ...doctor, location: doctor.location || locations.get(doctor.doctorId) || null }))
+    return Array.isArray(result?.data) ? { ...result, data: enriched } : { ...result, doctors: enriched }
+  } catch {
+    return result
+  }
 }
 
 export const doctorPortalService = {

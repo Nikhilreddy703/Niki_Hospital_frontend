@@ -7,9 +7,16 @@ import Doctors from './pages/Doctors.jsx'
 import TrackAppointment from './pages/TrackAppointment.jsx'
 import { About, Contact, Services } from './pages/InfoPages.jsx'
 import DoctorPortal, { DoctorLogin, DoctorProtected } from './pages/DoctorPortal.jsx'
+import { HospitalStaffRoutes, LoginSelection, StaffLogin } from './pages/HospitalStaffPortal.jsx'
 
 export default function App() {
   return <Routes>
+    <Route path="/login" element={<LoginSelection/>}/>
+    <Route path="/staff/login" element={<StaffLogin/>}/>
+    <Route path="/staff" element={<HospitalStaffRoutes/>}/>
+    <Route path="/admin/*" element={<HospitalStaffRoutes/>}/>
+    <Route path="/reception/*" element={<HospitalStaffRoutes/>}/>
+    <Route path="/medical-center/*" element={<HospitalStaffRoutes/>}/>
     <Route path="/doctor/login" element={<DoctorLogin/>}/>
     <Route path="/doctor/*" element={<DoctorProtected><DoctorRoutes/></DoctorProtected>}/>
     <Route path="*" element={<><Header/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about" element={<About/>}/><Route path="/doctors" element={<Doctors/>}/><Route path="/services" element={<Services/>}/><Route path="/contact" element={<Contact/>}/><Route path="/track" element={<TrackAppointment/>}/><Route path="*" element={<Home/>}/></Routes></main><Footer/><ChatbotWidget/></>}/>
